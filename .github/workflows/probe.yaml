@@ -5,31 +5,31 @@ on:
   workflow_dispatch:
 
 jobs:
-  probe:
+  produce:
     runs-on: ubuntu-latest
+    outputs:
+      reports: ${{ steps.gen.outputs.reports }}
     steps:
       - id: gen
         run: echo "reports=scan.txt,sbom.json" >> "$GITHUB_OUTPUT"
-      - name: join string literal with separator
+
+  consume:
+    # Exact reproduction from rhysd/actionlint#768
+    needs: produce
+    if: ${{ contains(join(needs.produce.outputs.reports), '.txt') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: string literals
         env:
           R1: ${{ join('literal-string', ',') }}
-        run: echo "R1=$R1"
-      - name: join string step output with separator
+          R3: ${{ join('literal-string') }}
+          R5: ${{ join('ab', '-') }}
+        run: echo "R1=$R1 R3=$R3 R5=$R5"
+      - name: string step output
         env:
           R2: ${{ join(steps.gen.outputs.reports, ',') }}
         run: echo "R2=$R2"
-      - name: join string literal without separator
-        env:
-          R3: ${{ join('literal-string') }}
-        run: echo "R3=$R3"
-      - name: join array still works
+      - name: array still works
         env:
           R4: ${{ join(fromJSON('["a","b"]'), ',') }}
         run: echo "R4=$R4"
-      - name: join string semantics single value
-        env:
-          R5: ${{ join('ab', '-') }}
-        run: echo "R5=$R5"
-      - name: join issue repro if condition
-        if: ${{ contains(join(steps.gen.outputs.reports), '.txt') }}
-        run: echo "repro-if-ok"
