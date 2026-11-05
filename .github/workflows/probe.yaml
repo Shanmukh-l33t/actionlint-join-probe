@@ -1,0 +1,25 @@
+name: join-string-probe
+on: workflow_dispatch
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - id: gen
+        run: echo "reports=scan.txt,sbom.json" >> "$GITHUB_OUTPUT"
+      - name: join string literal with separator
+        env:
+          R1: ${{ join('literal-string', ',') }}
+        run: echo "R1=$R1"
+      - name: join string step output with separator
+        env:
+          R2: ${{ join(steps.gen.outputs.reports, ',') }}
+        run: echo "R2=$R2"
+      - name: join string literal without separator
+        env:
+          R3: ${{ join('literal-string') }}
+        run: echo "R3=$R3"
+      - name: join array still works
+        env:
+          R4: ${{ join(fromJSON('["a","b"]'), ',') }}
+        run: echo "R4=$R4"
