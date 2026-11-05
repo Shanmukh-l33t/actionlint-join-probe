@@ -26,3 +26,10 @@ jobs:
         env:
           R4: ${{ join(fromJSON('["a","b"]'), ',') }}
         run: echo "R4=$R4"
+      - name: join string semantics single value
+        env:
+          R5: ${{ join('ab', '-') }}
+        run: echo "R5=$R5"
+      - name: join issue repro if condition
+        if: ${{ contains(join(steps.gen.outputs.reports), '.txt') }}
+        run: echo "repro-if-ok"
