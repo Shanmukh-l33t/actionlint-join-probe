@@ -1,5 +1,8 @@
 name: join-string-probe
-on: workflow_dispatch
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
 
 jobs:
   probe:
