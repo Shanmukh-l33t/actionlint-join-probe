@@ -1,0 +1,9 @@
+name: inputs-probe-pure
+on:
+  push:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: eq
+        run: echo "eq_empty=${{ inputs == '' }}"
