@@ -1,7 +1,6 @@
 name: inputs-probe-schedule
 on:
-  schedule:
-    - cron: '* * * * *'
+  # schedule trigger removed after evidence capture (runs 42358854086 / 42362087401 / 42365021205); file kept as provenance for rhysd/actionlint#767
   workflow_dispatch:
     inputs:
       upload:
