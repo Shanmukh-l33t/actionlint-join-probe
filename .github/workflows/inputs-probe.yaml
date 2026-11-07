@@ -1,0 +1,24 @@
+name: inputs-probe
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      upload:
+        type: boolean
+        default: true
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: dump-eq-empty
+        run: echo "eq_empty=${{ inputs == '' }}"
+      - name: dump-tojson
+        run: echo "toJSON_inputs=${{ toJson(inputs) }}"
+      - name: dump-upload
+        run: echo "upload_value=${{ inputs.upload }}"
+      - name: gate-empty
+        if: ${{ inputs == '' }}
+        run: echo "GATE inputs == '' evaluated TRUE"
+      - name: gate-not-empty
+        if: ${{ inputs != '' }}
+        run: echo "GATE inputs != '' evaluated TRUE"
